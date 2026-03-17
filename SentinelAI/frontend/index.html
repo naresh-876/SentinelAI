@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        /* --- METALLIC CYBER THEME --- */
         :root {
             --bg-base: #06090e;
             --panel-grad: linear-gradient(145deg, #10151f, #18202d);
@@ -40,100 +39,653 @@
             overflow: hidden;
         }
 
-        /* SIDEBAR NAVIGATION */
         .sidebar {
-            width: 280px; background: var(--panel-grad); border-right: 1px solid var(--neon-cyan-dim);
-            display: flex; flex-direction: column; padding: 20px 0; z-index: 10; box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+            width: 280px;
+            background: var(--panel-grad);
+            border-right: 1px solid var(--neon-cyan-dim);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            z-index: 10;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.5);
         }
-        .logo { font-size: 2em; font-weight: 900; color: white; text-align: center; margin-bottom: 2px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-cyan);}
-        .logo span { color: var(--neon-cyan); }
-        .logo-sub { color: var(--text-muted); font-size: 0.75em; text-align: center; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 40px; border-bottom: 1px solid var(--metal-border); padding-bottom: 15px;}
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; padding: 0 15px; }
-        .nav-item { padding: 14px 20px; border-radius: 4px; color: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 15px; font-weight: 600; border-left: 3px solid transparent; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;}
-        .nav-item:hover { background: rgba(0, 243, 255, 0.05); color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan-dim);}
-        .nav-item.active { background: linear-gradient(90deg, var(--neon-cyan-dim), transparent); color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); box-shadow: inset 5px 0 15px rgba(0, 243, 255, 0.1); text-shadow: 0 0 10px var(--neon-cyan);}
-        .nav-item i { width: 20px; text-align: center; font-size: 1.2em; }
-        .nav-item.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+        .logo {
+            font-size: 2em;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            margin-bottom: 2px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
 
-        /* MAIN CONTENT AREA */
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; position: relative; backdrop-filter: blur(5px); background: radial-gradient(circle at center, transparent 0%, rgba(6,9,14,0.8) 100%);}
-        .view-section { display: none; opacity: 0; transform: translateY(20px); transition: all 0.4s ease-out; }
-        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
+        .logo span {
+            color: var(--neon-cyan);
+        }
 
-        .section-header { margin-bottom: 30px; border-bottom: 1px solid var(--neon-cyan-dim); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;}
-        .section-header-text h2 { margin: 0; color: white; font-size: 1.8em; display: flex; align-items: center; gap: 12px; text-shadow: 0 0 10px rgba(255,255,255,0.2);}
-        .section-header-text h2 i { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
-        .section-header-text p { color: var(--text-muted); margin: 5px 0 0 0; font-family: monospace; }
+        .logo-sub {
+            color: var(--text-muted);
+            font-size: 0.75em;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--metal-border);
+            padding-bottom: 15px;
+        }
 
-        .full-panel { background: var(--panel-grad); padding: 30px; border-radius: 8px; border: 1px solid var(--metal-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); min-height: 500px; transition: border 0.3s, box-shadow 0.3s;}
-        .full-panel:hover { border: 1px solid var(--neon-cyan-dim); box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px var(--neon-cyan-dim);}
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 15px;
+        }
 
-        /* HOME / UPLOAD VIEW */
-        .upload-container { max-width: 600px; margin: 80px auto 0; background: var(--panel-grad); border: 1px solid var(--neon-cyan-dim); border-radius: 8px; padding: 50px; text-align: center; box-shadow: 0 0 30px var(--neon-cyan-dim), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; overflow: hidden;}
-        .upload-container::before { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 50%; background: linear-gradient(to bottom, transparent, var(--neon-cyan-dim)); animation: scanline 4s linear infinite; pointer-events: none;}
-        @keyframes scanline { 0% { top: -50%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        .nav-item {
+            padding: 14px 20px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
 
-        .upload-container i.fa-shield-virus { font-size: 5em; color: var(--neon-cyan); margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--neon-cyan)); }
-        input[type="file"] { width: 100%; color: var(--neon-cyan); font-family: monospace; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px; border: 1px solid var(--text-muted); margin-bottom: 25px; box-sizing: border-box; transition: all 0.3s;}
-        input[type="file"]:hover { border-color: var(--neon-cyan); box-shadow: inset 0 0 10px var(--neon-cyan-dim); }
+        .nav-item:hover {
+            background: rgba(0, 243, 255, 0.05);
+            color: var(--neon-cyan);
+            border-left: 3px solid var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan-dim);
+        }
 
-        button.action-btn { width: 100%; padding: 18px; background: transparent; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 1.1em; letter-spacing: 2px; text-transform: uppercase; box-shadow: inset 0 0 10px transparent;}
-        button.action-btn:hover { background: var(--neon-cyan-dim); box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan); text-shadow: 0 0 5px white;}
-        button.small-btn { width: auto; padding: 10px 20px; font-size: 0.9em; display: flex; align-items: center; gap: 8px; }
+        .nav-item.active {
+            background: linear-gradient(90deg, var(--neon-cyan-dim), transparent);
+            color: var(--neon-cyan);
+            border-left: 3px solid var(--neon-cyan);
+            box-shadow: inset 5px 0 15px rgba(0, 243, 255, 0.1);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
 
-        #loader { display: none; text-align: center; padding: 40px; }
-        .cyber-spinner { width: 60px; height: 60px; border: 3px solid transparent; border-top: 3px solid var(--neon-cyan); border-right: 3px solid var(--neon-red); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto; box-shadow: 0 0 20px var(--neon-cyan-dim);}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-text { color: var(--neon-cyan); font-family: monospace; letter-spacing: 3px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px var(--neon-cyan); } 100% { opacity: 0.3; } }
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
 
-        /* Vis.js Graph Box */
-        #attackGraphBox { width: 100%; height: 600px; background: rgba(0,0,0,0.6); border-radius: 4px; border: 1px solid var(--neon-cyan-dim); box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.05); background-image: radial-gradient(circle, var(--neon-cyan-dim) 1px, transparent 1px); background-size: 20px 20px;}
+        .nav-item.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
 
-        /* Tables & Data */
-        .threat-table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 1em; }
-        .threat-table th, .threat-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--metal-border); }
-        .threat-table th { color: var(--neon-cyan); text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;}
-        .badge { padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;}
-        .badge-high { background-color: var(--neon-red-dim); color: var(--neon-red); border: 1px solid var(--neon-red); box-shadow: 0 0 10px var(--neon-red-dim);}
-        .badge-low { background-color: rgba(0, 255, 102, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);}
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            backdrop-filter: blur(5px);
+            background: radial-gradient(circle at center, transparent 0%, rgba(6,9,14,0.8) 100%);
+        }
 
-        /* Timeline */
-        .timeline-wrapper { padding: 40px 0; display: flex; justify-content: center;}
-        .kill-chain-container { display: flex; flex-direction: column; gap: 0; position: relative; width: 100%; max-width: 800px; }
-        .kill-chain-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 24px; width: 2px; background: linear-gradient(180deg, var(--neon-cyan), var(--neon-red)); z-index: 1; box-shadow: 0 0 10px var(--neon-cyan);}
-        .timeline-node { position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 30px; margin-bottom: 40px; transition: transform 0.3s;}
-        .timeline-node:hover { transform: translateX(10px); }
-        .timeline-circle { width: 50px; height: 50px; background-color: var(--bg-base); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: bold; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan-dim); flex-shrink: 0; text-shadow: 0 0 5px var(--neon-cyan);}
-        .node-content { background: rgba(0,0,0,0.4); border: 1px solid var(--metal-border); padding: 20px; border-radius: 4px; width: 100%; backdrop-filter: blur(5px);}
-        .node-title { color: white; font-weight: bold; font-size: 1.1em; margin-bottom: 8px; text-shadow: 0 0 5px rgba(255,255,255,0.3);}
-        .node-desc { color: var(--text-muted); font-size: 0.9em; line-height: 1.5; font-family: monospace;}
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease-out;
+        }
 
-        /* Cards Grid */
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
-        .cyber-card { display: flex; align-items: flex-start; gap: 20px; background: var(--panel-grad); padding: 25px; border-radius: 4px; border: 1px solid var(--metal-border); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 5px 15px rgba(0,0,0,0.5); transition: all 0.3s;}
-        .cyber-card:hover { border-color: var(--neon-cyan-dim); box-shadow: 0 10px 20px rgba(0,0,0,0.6), 0 0 15px var(--neon-cyan-dim); transform: translateY(-3px);}
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        .mitre-icon-container { width: 50px; height: 50px; border-radius: 4px; background-color: var(--neon-cyan-dim); color: var(--neon-cyan); display: flex; align-items: center; justify-content: center; font-size: 1.5em; flex-shrink:0; border: 1px solid var(--neon-cyan);}
-        .mitre-tactic-title { color: white; font-weight: bold; font-size: 1.1em; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
-        .mitre-techniques-list { color: var(--neon-green); font-size: 0.9em; margin: 0; padding-left: 15px; font-family: monospace; text-shadow: 0 0 5px rgba(0,255,102,0.3);}
+        .section-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--neon-cyan-dim);
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
 
-        .rc-card-danger { border-left: 4px solid var(--neon-red); background: linear-gradient(90deg, var(--neon-red-dim), transparent); }
-        .rc-issue { color: var(--neon-red); font-weight: bold; font-size: 1.2em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 10px var(--neon-red-dim);}
-        .rc-explanation { color: var(--text-main); font-size: 1em; margin-bottom: 20px; line-height: 1.6;}
-        .rc-fix { background-color: rgba(0, 255, 102, 0.1); padding: 15px; border-radius: 4px; color: var(--neon-green); font-size: 0.95em; font-weight: bold; border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(0,255,102,0.1);}
+        .section-header-text h2 {
+            margin: 0;
+            color: white;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
 
-        /* Report */
-        #reportText { font-size: 1.1em; line-height: 1.8; color: var(--text-main);}
-        #reportText h3 { color: var(--neon-cyan); margin-top: 1.5em; border-bottom: 1px dashed var(--neon-cyan-dim); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
-        #reportText code { background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 4px; color: var(--neon-orange); font-family: monospace; border: 1px solid var(--metal-border);}
+        .section-header-text h2 i {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan);}
+        .section-header-text p {
+            color: var(--text-muted);
+            margin: 5px 0 0 0;
+            font-family: monospace;
+        }
+
+        .full-panel {
+            background: var(--panel-grad);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--metal-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            min-height: 500px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        .full-panel:hover {
+            border: 1px solid var(--neon-cyan-dim);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px var(--neon-cyan-dim);
+        }
+
+        .upload-container {
+            max-width: 600px;
+            margin: 80px auto 0;
+            background: var(--panel-grad);
+            border: 1px solid var(--neon-cyan-dim);
+            border-radius: 8px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 0 30px var(--neon-cyan-dim), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-container::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to bottom, transparent, var(--neon-cyan-dim));
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { top: -50%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .upload-container i.fa-shield-virus {
+            font-size: 5em;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px var(--neon-cyan));
+        }
+
+        input[type="file"] {
+            width: 100%;
+            color: var(--neon-cyan);
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--text-muted);
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            transition: all 0.3s;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: inset 0 0 10px var(--neon-cyan-dim);
+        }
+
+        button.action-btn {
+            width: 100%;
+            padding: 18px;
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: inset 0 0 10px transparent;
+        }
+
+        button.action-btn:hover {
+            background: var(--neon-cyan-dim);
+            box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan);
+            text-shadow: 0 0 5px white;
+        }
+
+        button.small-btn {
+            width: auto;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #loader {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .cyber-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--neon-cyan);
+            border-right: 3px solid var(--neon-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 0 20px var(--neon-cyan-dim);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: var(--neon-cyan);
+            font-family: monospace;
+            letter-spacing: 3px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; text-shadow: 0 0 10px var(--neon-cyan); }
+            100% { opacity: 0.3; }
+        }
+
+        #attackGraphBox {
+            width: 100%;
+            height: 600px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 4px;
+            border: 1px solid var(--neon-cyan-dim);
+            box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.05);
+            background-image: radial-gradient(circle, var(--neon-cyan-dim) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .threat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 1em;
+        }
+
+        .threat-table th, .threat-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--metal-border);
+        }
+
+        .threat-table th {
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge-high {
+            background-color: var(--neon-red-dim);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 10px var(--neon-red-dim);
+        }
+
+        .badge-medium {
+            background-color: rgba(245, 158, 11, 0.12);
+            color: var(--neon-orange);
+            border: 1px solid var(--neon-orange);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.18);
+        }
+
+        .badge-low {
+            background-color: rgba(0, 255, 102, 0.1);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
+
+        .timeline-wrapper {
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .kill-chain-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .kill-chain-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 24px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-red));
+            z-index: 1;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .timeline-node {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            margin-bottom: 40px;
+            transition: transform 0.3s;
+        }
+
+        .timeline-node:hover {
+            transform: translateX(10px);
+        }
+
+        .timeline-circle {
+            width: 50px;
+            height: 50px;
+            background-color: var(--bg-base);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan-dim);
+            flex-shrink: 0;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .node-content {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--metal-border);
+            padding: 20px;
+            border-radius: 4px;
+            width: 100%;
+            backdrop-filter: blur(5px);
+        }
+
+        .node-title {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.3);
+        }
+
+        .node-desc {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            line-height: 1.5;
+            font-family: monospace;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .cyber-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: var(--panel-grad);
+            padding: 25px;
+            border-radius: 4px;
+            border: 1px solid var(--metal-border);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--neon-cyan-dim);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), 0 0 15px var(--neon-cyan-dim);
+            transform: translateY(-3px);
+        }
+
+        .mitre-icon-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: var(--neon-cyan-dim);
+            color: var(--neon-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            flex-shrink: 0;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .mitre-tactic-title {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mitre-techniques-list {
+            color: var(--neon-green);
+            font-size: 0.9em;
+            margin: 0;
+            padding-left: 15px;
+            font-family: monospace;
+            text-shadow: 0 0 5px rgba(0,255,102,0.3);
+        }
+
+        .rc-card-danger {
+            border-left: 4px solid var(--neon-red);
+            background: linear-gradient(90deg, var(--neon-red-dim), transparent);
+        }
+
+        .rc-issue {
+            color: var(--neon-red);
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 10px var(--neon-red-dim);
+        }
+
+        .rc-explanation {
+            color: var(--text-main);
+            font-size: 1em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .rc-fix {
+            background-color: rgba(0, 255, 102, 0.1);
+            padding: 15px;
+            border-radius: 4px;
+            color: var(--neon-green);
+            font-size: 0.95em;
+            font-weight: bold;
+            border: 1px solid var(--neon-green);
+            box-shadow: 0 0 10px rgba(0,255,102,0.1);
+        }
+
+        .report-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .report-hero {
+            background: linear-gradient(145deg, rgba(0, 243, 255, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid var(--neon-cyan-dim);
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.08);
+        }
+
+        .report-hero h1 {
+            margin: 0 0 10px 0;
+            color: white;
+            font-size: 1.8em;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .report-hero p {
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 1.02em;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .report-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--metal-border);
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        .report-stat-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        .report-stat-value {
+            color: var(--neon-cyan);
+            font-size: 1.4em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .report-section {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--metal-border);
+            border-left: 4px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .report-section h2 {
+            margin: 0 0 14px 0;
+            color: var(--neon-cyan);
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .report-section p {
+            margin: 0;
+            color: var(--text-main);
+            line-height: 1.75;
+        }
+
+        .report-section ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .report-section li {
+            color: var(--text-main);
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .report-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--neon-cyan-dim);
+            background: rgba(0, 243, 255, 0.08);
+            color: var(--neon-cyan);
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .report-alert {
+            border-left-color: var(--neon-red);
+            background: linear-gradient(90deg, rgba(255, 0, 60, 0.08), rgba(255,255,255,0.02));
+        }
+
+        .report-alert h2 {
+            color: var(--neon-red);
+        }
+
+        .report-empty {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
     </style>
 </head>
 <body>
@@ -149,7 +701,7 @@
             <div class="nav-item disabled" onclick="switchView('view-intel')" id="nav-intel"><i class="fas fa-globe-americas"></i> Threat Intel</div>
             <div class="nav-item disabled" onclick="switchView('view-mitre')" id="nav-mitre"><i class="fas fa-chess-board"></i> MITRE TTPs</div>
             <div class="nav-item disabled" onclick="switchView('view-rootcause')" id="nav-rootcause"><i class="fas fa-bug"></i> Root Cause</div>
-            <div class="nav-item disabled" onclick="switchView('view-report')" id="nav-report"><i class="fas fa-terminal"></i> Log Report</div>
+            <div class="nav-item disabled" onclick="switchView('view-report')" id="nav-report"><i class="fas fa-file-alt"></i> Log Report</div>
         </div>
     </div>
 
@@ -206,7 +758,14 @@
             </div>
             <div class="full-panel">
                 <table class="threat-table">
-                    <thead><tr><th>Host IP</th><th>Location</th><th>ISP/Org</th><th>Risk Level</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Host IP</th>
+                            <th>Location</th>
+                            <th>ISP/Org</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
                     <tbody id="intelBox"></tbody>
                 </table>
             </div>
@@ -235,8 +794,8 @@
         <div id="view-report" class="view-section">
             <div class="section-header">
                 <div class="section-header-text">
-                    <h2><i class="fas fa-terminal"></i> AI Executive Summary</h2>
-                    <p>Generated natural language incident report.</p>
+                    <h2><i class="fas fa-file-alt"></i> Incident Executive Summary</h2>
+                    <p>Structured summary of findings, attack flow, TTP mapping, and remediation.</p>
                 </div>
                 <button class="action-btn small-btn" id="exportPdfBtn"><i class="fas fa-download"></i> EXPORT TO PDF</button>
             </div>
@@ -247,6 +806,7 @@
 
     <script>
         let networkInstance = null;
+        let latestAnalysisData = null;
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
@@ -255,9 +815,156 @@
             document.getElementById(viewId).classList.add('active');
             document.getElementById('nav-' + viewId.replace('view-', '')).classList.add('active');
 
-            if(viewId === 'view-graph' && networkInstance) {
+            if (viewId === 'view-graph' && networkInstance) {
                 setTimeout(() => networkInstance.fit(), 50);
             }
+        }
+
+        function escapeHtml(text) {
+            return (text || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function getSeverity(data) {
+            const threatIntel = data.threat_intel || [];
+            const highCount = threatIntel.filter(item =>
+                (item.threat_level || "").toLowerCase().includes("high")
+            ).length;
+
+            if (highCount >= 3) return "High";
+            if (highCount >= 1) return "Medium";
+            return "Low";
+        }
+
+        function getSeverityBadgeClass(level) {
+            const normalized = (level || "").toLowerCase();
+            if (normalized.includes("high")) return "badge-high";
+            if (normalized.includes("medium")) return "badge-medium";
+            return "badge-low";
+        }
+
+        function buildReportPage(data) {
+            const summaryText = data.summary || "No executive summary generated.";
+            const threatIntel = data.threat_intel || [];
+            const timeline = data.timeline || [];
+            const mitre = data.mitre_mapping || [];
+            const rootCause = data.root_cause || [];
+            const graphEdges = data.graph?.edges || [];
+
+            const severity = getSeverity(data);
+
+            const topIPs = threatIntel.length
+                ? threatIntel.map(item =>
+                    `<span class="report-chip">${escapeHtml(item.ip)} • ${escapeHtml(item.threat_level)}</span>`
+                  ).join("")
+                : `<span class="report-empty">No external threat indicators identified.</span>`;
+
+            const intelHtml = threatIntel.length
+                ? `<ul>${threatIntel.map(item => `
+                    <li>
+                        <strong>${escapeHtml(item.ip)}</strong> — ${escapeHtml(item.location || "Unknown location")}
+                        ${item.isp ? ` (${escapeHtml(item.isp)})` : ""} — ${escapeHtml(item.threat_level || "Unknown")}
+                    </li>
+                `).join("")}</ul>`
+                : `<p class="report-empty">No threat intelligence results available.</p>`;
+
+            const timelineHtml = timeline.length
+                ? `<ul>${timeline.map(item => `
+                    <li>
+                        <strong>Step ${escapeHtml(String(item.step || ""))}: ${escapeHtml(item.title || "Untitled event")}</strong><br>
+                        ${item.time ? `<span style="color: var(--text-muted);">Time: ${escapeHtml(item.time)}</span><br>` : ""}
+                        ${escapeHtml(item.description || "No description provided.")}
+                    </li>
+                `).join("")}</ul>`
+                : `<p class="report-empty">No timeline data available.</p>`;
+
+            const mitreHtml = mitre.length
+                ? `<ul>${mitre.map(item => `
+                    <li>
+                        <strong>${escapeHtml(item.tactic || "Unknown tactic")}</strong>
+                        ${item.techniques?.length ? ` — ${escapeHtml(item.techniques.join(", "))}` : ""}
+                        ${item.description ? `<br>${escapeHtml(item.description)}` : ""}
+                    </li>
+                `).join("")}</ul>`
+                : `<p class="report-empty">No MITRE mapping available.</p>`;
+
+            const rootCauseHtml = rootCause.length
+                ? `<ul>${rootCause.map(item => `
+                    <li>
+                        <strong>${escapeHtml(item.issue || "Unspecified issue")}</strong><br>
+                        ${escapeHtml(item.explanation || "No explanation provided.")}<br>
+                        <strong>Fix:</strong> ${escapeHtml(item.fix || "No remediation provided.")}
+                    </li>
+                `).join("")}</ul>`
+                : `<p class="report-empty">No root cause findings available.</p>`;
+
+            const reportMarkdownSection = data.report
+                ? `
+                    <div class="report-section">
+                        <h2>Detailed Narrative Report</h2>
+                        <div style="line-height: 1.8; color: var(--text-main);">
+                            ${marked.parse(data.report)}
+                        </div>
+                    </div>
+                  `
+                : "";
+
+            return `
+                <div class="report-wrapper">
+                    <div class="report-hero">
+                        <h1>Incident Executive Summary</h1>
+                        <p>${escapeHtml(summaryText)}</p>
+                    </div>
+
+                    <div class="report-grid">
+                        <div class="report-stat">
+                            <div class="report-stat-label">Severity</div>
+                            <div class="report-stat-value">${severity}</div>
+                        </div>
+                        <div class="report-stat">
+                            <div class="report-stat-label">Threat IPs</div>
+                            <div class="report-stat-value">${threatIntel.length}</div>
+                        </div>
+                        <div class="report-stat">
+                            <div class="report-stat-label">Timeline Events</div>
+                            <div class="report-stat-value">${timeline.length}</div>
+                        </div>
+                        <div class="report-stat">
+                            <div class="report-stat-label">Attack Links</div>
+                            <div class="report-stat-value">${graphEdges.length}</div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h2>Flagged Indicators</h2>
+                        <div class="report-chip-row">${topIPs}</div>
+                    </div>
+
+                    <div class="report-section">
+                        <h2>Threat Intelligence Summary</h2>
+                        ${intelHtml}
+                    </div>
+
+                    <div class="report-section">
+                        <h2>Attack Timeline Summary</h2>
+                        ${timelineHtml}
+                    </div>
+
+                    <div class="report-section">
+                        <h2>MITRE ATT&amp;CK Summary</h2>
+                        ${mitreHtml}
+                    </div>
+
+                    <div class="report-section report-alert">
+                        <h2>Root Cause &amp; Remediation</h2>
+                        ${rootCauseHtml}
+                    </div>
+
+                    ${reportMarkdownSection}
+                </div>
+            `;
         }
 
         const analyzeBtn = document.getElementById('analyzeBtn');
@@ -266,16 +973,29 @@
         const exportPdfBtn = document.getElementById('exportPdfBtn');
 
         const tacticIcons = {
-            "Reconnaissance": "fas fa-binoculars", "Resource Development": "fas fa-cogs", "Initial Access": "fas fa-door-open",
-            "Execution": "fas fa-terminal", "Persistence": "fas fa-shield-alt", "Privilege Escalation": "fas fa-level-up-alt",
-            "Defense Evasion": "fas fa-user-secret", "Credential Access": "fas fa-id-badge", "Discovery": "fas fa-network-wired",
-            "Lateral Movement": "fas fa-exchange-alt", "Collection": "fas fa-box-open", "Command and Control": "fas fa-server",
-            "Exfiltration": "fas fa-truck", "Impact": "fas fa-fire", "Unknown": "fas fa-bug"
+            "Reconnaissance": "fas fa-binoculars",
+            "Resource Development": "fas fa-cogs",
+            "Initial Access": "fas fa-door-open",
+            "Execution": "fas fa-terminal",
+            "Persistence": "fas fa-shield-alt",
+            "Privilege Escalation": "fas fa-level-up-alt",
+            "Defense Evasion": "fas fa-user-secret",
+            "Credential Access": "fas fa-id-badge",
+            "Discovery": "fas fa-network-wired",
+            "Lateral Movement": "fas fa-exchange-alt",
+            "Collection": "fas fa-box-open",
+            "Command and Control": "fas fa-server",
+            "Exfiltration": "fas fa-truck",
+            "Impact": "fas fa-fire",
+            "Unknown": "fas fa-bug"
         };
 
         analyzeBtn.addEventListener('click', async () => {
             const file = fileInput.files[0];
-            if (!file) return alert("Please select a log file.");
+            if (!file) {
+                alert("Please select a log file.");
+                return;
+            }
 
             analyzeBtn.style.display = "none";
             loader.style.display = "block";
@@ -284,110 +1004,143 @@
             formData.append('file', file);
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/analyze', { method: 'POST', body: formData });
+                const response = await fetch('http://127.0.0.1:8000/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
                 const data = await response.json();
+                latestAnalysisData = data;
 
-                if (data.report) {
-
-                    if (data.graph && data.graph.nodes && data.graph.edges) {
-                        const container = document.getElementById('attackGraphBox');
-                        const graphData = {
-                            nodes: new vis.DataSet(data.graph.nodes),
-                            edges: new vis.DataSet(data.graph.edges)
-                        };
-
-                        const options = {
-                            layout: { hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', nodeSpacing: 250, levelSeparation: 150 } },
-                            physics: false,
-                            nodes: {
-                                shape: 'box', margin: 15, font: { color: '#000000', size: 16, face: 'monospace', bold: true },
-                                borderWidth: 2, shadow: { color: '#00f3ff', size: 10 }, borderRadius: 4
-                            },
-                            edges: {
-                                width: 2, font: { color: '#00f3ff', size: 13, align: 'middle', background: '#111827' },
-                                arrows: 'to', color: { color: '#00f3ff' }, smooth: { type: 'cubicBezier' }
-                            },
-                            groups: {
-                                attacker: { color: { background: '#ff003c', border: '#ff003c' }, font: {color: '#ffffff'} },
-                                target: { color: { background: '#00f3ff', border: '#00f3ff' }, font: {color: '#000000'} }
-                            }
-                        };
-                        networkInstance = new vis.Network(container, graphData, options);
-                    }
-
-                    const intelBox = document.getElementById('intelBox');
-                    intelBox.innerHTML = "";
-                    if (data.threat_intel && data.threat_intel.length > 0) {
-                        data.threat_intel.forEach(intel => {
-                            const badgeClass = intel.threat_level.includes("High") ? "badge-high" : "badge-low";
-                            intelBox.innerHTML += `<tr>
-                                <td style="color:var(--neon-cyan); font-weight:bold; font-family:monospace;">${intel.ip}</td>
-                                <td>${intel.location}</td>
-                                <td>${intel.isp || 'Unknown'}</td>
-                                <td><span class="badge ${badgeClass}">${intel.threat_level}</span></td>
-                            </tr>`;
-                        });
-                    }
-
-                    const timelineBox = document.getElementById('timelineBox');
-                    timelineBox.innerHTML = "";
-                    if (data.timeline) {
-                        data.timeline.forEach((item, index) => {
-                            timelineBox.innerHTML += `
-                                <div class="timeline-node">
-                                    <div class="timeline-circle">${item.step || index + 1}</div>
-                                    <div class="node-content">
-                                        <div class="node-title">${item.title}</div>
-                                        <div class="node-desc">${item.description}</div>
-                                    </div>
-                                </div>`;
-                        });
-                    }
-
-                    const mitreBox = document.getElementById('mitreBox');
-                    mitreBox.innerHTML = "";
-                    if (data.mitre_mapping) {
-                        data.mitre_mapping.forEach(mapping => {
-                            const iconClass = tacticIcons[mapping.tactic] || tacticIcons["Unknown"];
-                            let techListHtml = mapping.techniques.map(tech => `<li>${tech}</li>`).join('');
-                            mitreBox.innerHTML += `
-                                <div class="cyber-card">
-                                    <div class="mitre-icon-container"><i class="${iconClass}"></i></div>
-                                    <div>
-                                        <div class="mitre-tactic-title">${mapping.tactic}</div>
-                                        <ul class="mitre-techniques-list">${techListHtml}</ul>
-                                    </div>
-                                </div>`;
-                        });
-                    }
-
-                    const rootCauseBox = document.getElementById('rootCauseBox');
-                    rootCauseBox.innerHTML = "";
-                    if (data.root_cause && data.root_cause.length > 0) {
-                        data.root_cause.forEach(rc => {
-                            rootCauseBox.innerHTML += `
-                                <div class="cyber-card rc-card-danger" style="flex-direction:column; gap:10px;">
-                                    <div class="rc-issue"><i class="fas fa-exclamation-triangle"></i> ${rc.issue}</div>
-                                    <div class="rc-explanation">${rc.explanation}</div>
-                                    <div class="rc-fix"><i class="fas fa-wrench"></i> Fix: ${rc.fix}</div>
-                                </div>`;
-                        });
-                    }
-
-                    document.getElementById('reportText').innerHTML = marked.parse(data.report);
-
-                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('disabled'));
-                    loader.style.display = "none";
-                    analyzeBtn.style.display = "block";
-                    analyzeBtn.innerText = "Initialize New Scan";
-
-                    switchView('view-graph');
-
-                } else if (data.error) {
+                if (data.error) {
                     alert("Error: " + data.error);
                     loader.style.display = "none";
                     analyzeBtn.style.display = "block";
+                    return;
                 }
+
+                if (!(data.summary || data.report)) {
+                    alert("The backend response did not include a valid report summary.");
+                    loader.style.display = "none";
+                    analyzeBtn.style.display = "block";
+                    return;
+                }
+
+                if (data.graph && data.graph.nodes && data.graph.edges) {
+                    const container = document.getElementById('attackGraphBox');
+                    const graphData = {
+                        nodes: new vis.DataSet(data.graph.nodes),
+                        edges: new vis.DataSet(data.graph.edges)
+                    };
+
+                    const options = {
+                        layout: {
+                            hierarchical: {
+                                enabled: true,
+                                direction: 'UD',
+                                sortMethod: 'directed',
+                                nodeSpacing: 250,
+                                levelSeparation: 150
+                            }
+                        },
+                        physics: false,
+                        nodes: {
+                            shape: 'box',
+                            margin: 15,
+                            font: { color: '#000000', size: 16, face: 'monospace', bold: true },
+                            borderWidth: 2,
+                            shadow: { color: '#00f3ff', size: 10 },
+                            borderRadius: 4
+                        },
+                        edges: {
+                            width: 2,
+                            font: { color: '#00f3ff', size: 13, align: 'middle', background: '#111827' },
+                            arrows: 'to',
+                            color: { color: '#00f3ff' },
+                            smooth: { type: 'cubicBezier' }
+                        },
+                        groups: {
+                            attacker: { color: { background: '#ff003c', border: '#ff003c' }, font: { color: '#ffffff' } },
+                            target: { color: { background: '#00f3ff', border: '#00f3ff' }, font: { color: '#000000' } }
+                        }
+                    };
+
+                    networkInstance = new vis.Network(container, graphData, options);
+                }
+
+                const intelBox = document.getElementById('intelBox');
+                intelBox.innerHTML = "";
+                if (data.threat_intel && data.threat_intel.length > 0) {
+                    data.threat_intel.forEach(intel => {
+                        const badgeClass = getSeverityBadgeClass(intel.threat_level);
+                        intelBox.innerHTML += `
+                            <tr>
+                                <td style="color:var(--neon-cyan); font-weight:bold; font-family:monospace;">${escapeHtml(intel.ip)}</td>
+                                <td>${escapeHtml(intel.location)}</td>
+                                <td>${escapeHtml(intel.isp || 'Unknown')}</td>
+                                <td><span class="badge ${badgeClass}">${escapeHtml(intel.threat_level)}</span></td>
+                            </tr>`;
+                    });
+                }
+
+                const timelineBox = document.getElementById('timelineBox');
+                timelineBox.innerHTML = "";
+                if (data.timeline) {
+                    data.timeline.forEach((item, index) => {
+                        timelineBox.innerHTML += `
+                            <div class="timeline-node">
+                                <div class="timeline-circle">${escapeHtml(String(item.step || index + 1))}</div>
+                                <div class="node-content">
+                                    <div class="node-title">${escapeHtml(item.title || "Untitled Event")}</div>
+                                    <div class="node-desc">
+                                        ${item.time ? `<div style="margin-bottom: 8px; color: var(--neon-cyan);">Time: ${escapeHtml(item.time)}</div>` : ""}
+                                        ${escapeHtml(item.description || "No description provided.")}
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                }
+
+                const mitreBox = document.getElementById('mitreBox');
+                mitreBox.innerHTML = "";
+                if (data.mitre_mapping) {
+                    data.mitre_mapping.forEach(mapping => {
+                        const iconClass = tacticIcons[mapping.tactic] || tacticIcons["Unknown"];
+                        const techListHtml = (mapping.techniques || []).map(tech => `<li>${escapeHtml(tech)}</li>`).join('');
+                        mitreBox.innerHTML += `
+                            <div class="cyber-card">
+                                <div class="mitre-icon-container"><i class="${iconClass}"></i></div>
+                                <div>
+                                    <div class="mitre-tactic-title">${escapeHtml(mapping.tactic || "Unknown")}</div>
+                                    <ul class="mitre-techniques-list">${techListHtml || "<li>No techniques provided</li>"}</ul>
+                                    ${mapping.description ? `<div style="margin-top: 10px; color: var(--text-muted); line-height: 1.5;">${escapeHtml(mapping.description)}</div>` : ""}
+                                </div>
+                            </div>`;
+                    });
+                }
+
+                const rootCauseBox = document.getElementById('rootCauseBox');
+                rootCauseBox.innerHTML = "";
+                if (data.root_cause && data.root_cause.length > 0) {
+                    data.root_cause.forEach(rc => {
+                        rootCauseBox.innerHTML += `
+                            <div class="cyber-card rc-card-danger" style="flex-direction:column; gap:10px;">
+                                <div class="rc-issue"><i class="fas fa-exclamation-triangle"></i> ${escapeHtml(rc.issue || "Unknown Issue")}</div>
+                                <div class="rc-explanation">${escapeHtml(rc.explanation || "No explanation provided.")}</div>
+                                <div class="rc-fix"><i class="fas fa-wrench"></i> Fix: ${escapeHtml(rc.fix || "No fix provided.")}</div>
+                            </div>`;
+                    });
+                }
+
+                document.getElementById('reportText').innerHTML = buildReportPage(data);
+
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('disabled'));
+                loader.style.display = "none";
+                analyzeBtn.style.display = "block";
+                analyzeBtn.innerText = "Initialize New Scan";
+
+                switchView('view-report');
+
             } catch (err) {
                 alert("Connection failed. Is the backend running?");
                 loader.style.display = "none";
@@ -395,40 +1148,43 @@
             }
         });
 
-        // --- NEW: PDF EXPORT LOGIC ---
         exportPdfBtn.addEventListener('click', () => {
+            if (!latestAnalysisData) {
+                alert("No report available to export yet.");
+                return;
+            }
+
             exportPdfBtn.innerText = "GENERATING PDF...";
             exportPdfBtn.disabled = true;
 
-            const element = document.getElementById('reportText');
-
-            // Format the PDF to look like an official document but retain the dark theme
-            const opt = {
-                margin:       0.5,
-                filename:     'SentinelAI_Executive_Report.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, backgroundColor: '#06090e' },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            // Create a temporary container to add a professional title specifically for the PDF
-            const pdfContainer = document.createElement('div');
-            pdfContainer.style.color = '#e0e6ed';
-            pdfContainer.style.backgroundColor = '#06090e';
-            pdfContainer.style.padding = '20px';
-            pdfContainer.style.fontFamily = 'monospace';
-            pdfContainer.innerHTML = `
+            const pdfContent = document.createElement('div');
+            pdfContent.style.backgroundColor = '#06090e';
+            pdfContent.style.color = '#e0e6ed';
+            pdfContent.style.padding = '24px';
+            pdfContent.style.fontFamily = "'Segoe UI', sans-serif";
+            pdfContent.innerHTML = `
                 <div style="text-align:center; border-bottom: 2px solid #00f3ff; margin-bottom: 30px; padding-bottom: 10px;">
-                    <h1 style="color: #00f3ff; font-family: 'Segoe UI', sans-serif; letter-spacing: 2px; margin:0;">[+] SentinelAI Command Center</h1>
-                    <p style="color: #8a96a8; margin-top:5px;">AUTOMATED INCIDENT RESPONSE REPORT</p>
+                    <h1 style="color: #00f3ff; margin: 0;">SentinelAI Executive Report</h1>
+                    <p style="color: #8a96a8; margin-top: 8px;">Structured incident summary and remediation guidance</p>
                 </div>
-                ${element.innerHTML}
+                ${buildReportPage(latestAnalysisData)}
             `;
 
-            // Generate and download
-            html2pdf().set(opt).from(pdfContainer).save().then(() => {
+            const opt = {
+                margin: 0.5,
+                filename: 'SentinelAI_Executive_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#06090e' },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(pdfContent).save().then(() => {
                 exportPdfBtn.innerHTML = '<i class="fas fa-download"></i> EXPORT TO PDF';
                 exportPdfBtn.disabled = false;
+            }).catch(() => {
+                exportPdfBtn.innerHTML = '<i class="fas fa-download"></i> EXPORT TO PDF';
+                exportPdfBtn.disabled = false;
+                alert("PDF generation failed.");
             });
         });
     </script>
