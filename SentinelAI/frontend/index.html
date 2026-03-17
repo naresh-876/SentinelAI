@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelAI | Cyber Command</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- METALLIC CYBER THEME --- */
+        :root {
+            --bg-base: #06090e;
+            --panel-grad: linear-gradient(145deg, #10151f, #18202d);
+            --metal-border: rgba(255, 255, 255, 0.05);
+            --neon-cyan: #00f3ff;
+            --neon-cyan-dim: rgba(0, 243, 255, 0.2);
+            --neon-red: #ff003c;
+            --neon-red-dim: rgba(255, 0, 60, 0.2);
+            --neon-green: #00ff66;
+            --text-main: #e0e6ed;
+            --text-muted: #8a96a8;
+            --neon-orange: #f59e0b;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image:
+                linear-gradient(var(--neon-cyan-dim) 1px, transparent 1px),
+                linear-gradient(90deg, var(--neon-cyan-dim) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+            color: var(--text-main);
+            font-family: 'Segoe UI', Consolas, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            width: 280px; background: var(--panel-grad); border-right: 1px solid var(--neon-cyan-dim);
+            display: flex; flex-direction: column; padding: 20px 0; z-index: 10; box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+        }
+        .logo { font-size: 2em; font-weight: 900; color: white; text-align: center; margin-bottom: 2px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-cyan);}
+        .logo span { color: var(--neon-cyan); }
+        .logo-sub { color: var(--text-muted); font-size: 0.75em; text-align: center; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 40px; border-bottom: 1px solid var(--metal-border); padding-bottom: 15px;}
+
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; padding: 0 15px; }
+        .nav-item { padding: 14px 20px; border-radius: 4px; color: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; gap: 15px; font-weight: 600; border-left: 3px solid transparent; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;}
+        .nav-item:hover { background: rgba(0, 243, 255, 0.05); color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan-dim);}
+        .nav-item.active { background: linear-gradient(90deg, var(--neon-cyan-dim), transparent); color: var(--neon-cyan); border-left: 3px solid var(--neon-cyan); box-shadow: inset 5px 0 15px rgba(0, 243, 255, 0.1); text-shadow: 0 0 10px var(--neon-cyan);}
+        .nav-item i { width: 20px; text-align: center; font-size: 1.2em; }
+        .nav-item.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+        /* MAIN CONTENT AREA */
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; position: relative; backdrop-filter: blur(5px); background: radial-gradient(circle at center, transparent 0%, rgba(6,9,14,0.8) 100%);}
+        .view-section { display: none; opacity: 0; transform: translateY(20px); transition: all 0.4s ease-out; }
+        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .section-header { margin-bottom: 30px; border-bottom: 1px solid var(--neon-cyan-dim); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;}
+        .section-header-text h2 { margin: 0; color: white; font-size: 1.8em; display: flex; align-items: center; gap: 12px; text-shadow: 0 0 10px rgba(255,255,255,0.2);}
+        .section-header-text h2 i { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
+        .section-header-text p { color: var(--text-muted); margin: 5px 0 0 0; font-family: monospace; }
+
+        .full-panel { background: var(--panel-grad); padding: 30px; border-radius: 8px; border: 1px solid var(--metal-border); box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); min-height: 500px; transition: border 0.3s, box-shadow 0.3s;}
+        .full-panel:hover { border: 1px solid var(--neon-cyan-dim); box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px var(--neon-cyan-dim);}
+
+        /* HOME / UPLOAD VIEW */
+        .upload-container { max-width: 600px; margin: 80px auto 0; background: var(--panel-grad); border: 1px solid var(--neon-cyan-dim); border-radius: 8px; padding: 50px; text-align: center; box-shadow: 0 0 30px var(--neon-cyan-dim), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; overflow: hidden;}
+        .upload-container::before { content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 50%; background: linear-gradient(to bottom, transparent, var(--neon-cyan-dim)); animation: scanline 4s linear infinite; pointer-events: none;}
+        @keyframes scanline { 0% { top: -50%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+        .upload-container i.fa-shield-virus { font-size: 5em; color: var(--neon-cyan); margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--neon-cyan)); }
+        input[type="file"] { width: 100%; color: var(--neon-cyan); font-family: monospace; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 4px; border: 1px solid var(--text-muted); margin-bottom: 25px; box-sizing: border-box; transition: all 0.3s;}
+        input[type="file"]:hover { border-color: var(--neon-cyan); box-shadow: inset 0 0 10px var(--neon-cyan-dim); }
+
+        button.action-btn { width: 100%; padding: 18px; background: transparent; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-size: 1.1em; letter-spacing: 2px; text-transform: uppercase; box-shadow: inset 0 0 10px transparent;}
+        button.action-btn:hover { background: var(--neon-cyan-dim); box-shadow: 0 0 20px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan); text-shadow: 0 0 5px white;}
+        button.small-btn { width: auto; padding: 10px 20px; font-size: 0.9em; display: flex; align-items: center; gap: 8px; }
+
+        #loader { display: none; text-align: center; padding: 40px; }
+        .cyber-spinner { width: 60px; height: 60px; border: 3px solid transparent; border-top: 3px solid var(--neon-cyan); border-right: 3px solid var(--neon-red); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto; box-shadow: 0 0 20px var(--neon-cyan-dim);}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { color: var(--neon-cyan); font-family: monospace; letter-spacing: 3px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; text-shadow: 0 0 10px var(--neon-cyan); } 100% { opacity: 0.3; } }
+
+        /* Vis.js Graph Box */
+        #attackGraphBox { width: 100%; height: 600px; background: rgba(0,0,0,0.6); border-radius: 4px; border: 1px solid var(--neon-cyan-dim); box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.05); background-image: radial-gradient(circle, var(--neon-cyan-dim) 1px, transparent 1px); background-size: 20px 20px;}
+
+        /* Tables & Data */
+        .threat-table { width: 100%; border-collapse: collapse; font-family: monospace; font-size: 1em; }
+        .threat-table th, .threat-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--metal-border); }
+        .threat-table th { color: var(--neon-cyan); text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px;}
+        .badge { padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;}
+        .badge-high { background-color: var(--neon-red-dim); color: var(--neon-red); border: 1px solid var(--neon-red); box-shadow: 0 0 10px var(--neon-red-dim);}
+        .badge-low { background-color: rgba(0, 255, 102, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);}
+
+        /* Timeline */
+        .timeline-wrapper { padding: 40px 0; display: flex; justify-content: center;}
+        .kill-chain-container { display: flex; flex-direction: column; gap: 0; position: relative; width: 100%; max-width: 800px; }
+        .kill-chain-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 24px; width: 2px; background: linear-gradient(180deg, var(--neon-cyan), var(--neon-red)); z-index: 1; box-shadow: 0 0 10px var(--neon-cyan);}
+        .timeline-node { position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 30px; margin-bottom: 40px; transition: transform 0.3s;}
+        .timeline-node:hover { transform: translateX(10px); }
+        .timeline-circle { width: 50px; height: 50px; background-color: var(--bg-base); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; font-weight: bold; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 0 10px var(--neon-cyan-dim); flex-shrink: 0; text-shadow: 0 0 5px var(--neon-cyan);}
+        .node-content { background: rgba(0,0,0,0.4); border: 1px solid var(--metal-border); padding: 20px; border-radius: 4px; width: 100%; backdrop-filter: blur(5px);}
+        .node-title { color: white; font-weight: bold; font-size: 1.1em; margin-bottom: 8px; text-shadow: 0 0 5px rgba(255,255,255,0.3);}
+        .node-desc { color: var(--text-muted); font-size: 0.9em; line-height: 1.5; font-family: monospace;}
+
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
+        .cyber-card { display: flex; align-items: flex-start; gap: 20px; background: var(--panel-grad); padding: 25px; border-radius: 4px; border: 1px solid var(--metal-border); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 5px 15px rgba(0,0,0,0.5); transition: all 0.3s;}
+        .cyber-card:hover { border-color: var(--neon-cyan-dim); box-shadow: 0 10px 20px rgba(0,0,0,0.6), 0 0 15px var(--neon-cyan-dim); transform: translateY(-3px);}
+
+        .mitre-icon-container { width: 50px; height: 50px; border-radius: 4px; background-color: var(--neon-cyan-dim); color: var(--neon-cyan); display: flex; align-items: center; justify-content: center; font-size: 1.5em; flex-shrink:0; border: 1px solid var(--neon-cyan);}
+        .mitre-tactic-title { color: white; font-weight: bold; font-size: 1.1em; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .mitre-techniques-list { color: var(--neon-green); font-size: 0.9em; margin: 0; padding-left: 15px; font-family: monospace; text-shadow: 0 0 5px rgba(0,255,102,0.3);}
+
+        .rc-card-danger { border-left: 4px solid var(--neon-red); background: linear-gradient(90deg, var(--neon-red-dim), transparent); }
+        .rc-issue { color: var(--neon-red); font-weight: bold; font-size: 1.2em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 10px var(--neon-red-dim);}
+        .rc-explanation { color: var(--text-main); font-size: 1em; margin-bottom: 20px; line-height: 1.6;}
+        .rc-fix { background-color: rgba(0, 255, 102, 0.1); padding: 15px; border-radius: 4px; color: var(--neon-green); font-size: 0.95em; font-weight: bold; border: 1px solid var(--neon-green); box-shadow: 0 0 10px rgba(0,255,102,0.1);}
+
+        /* Report */
+        #reportText { font-size: 1.1em; line-height: 1.8; color: var(--text-main);}
+        #reportText h3 { color: var(--neon-cyan); margin-top: 1.5em; border-bottom: 1px dashed var(--neon-cyan-dim); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        #reportText code { background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 4px; color: var(--neon-orange); font-family: monospace; border: 1px solid var(--metal-border);}
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan);}
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo"><span>[+]</span> S-AI</div>
+        <div class="logo-sub">Sys-Command</div>
+
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="switchView('view-home')" id="nav-home"><i class="fas fa-satellite-dish"></i> Data Ingest</div>
+            <div class="nav-item disabled" onclick="switchView('view-graph')" id="nav-graph"><i class="fas fa-sitemap"></i> Attack Tree</div>
+            <div class="nav-item disabled" onclick="switchView('view-timeline')" id="nav-timeline"><i class="fas fa-stream"></i> Kill Chain</div>
+            <div class="nav-item disabled" onclick="switchView('view-intel')" id="nav-intel"><i class="fas fa-globe-americas"></i> Threat Intel</div>
+            <div class="nav-item disabled" onclick="switchView('view-mitre')" id="nav-mitre"><i class="fas fa-chess-board"></i> MITRE TTPs</div>
+            <div class="nav-item disabled" onclick="switchView('view-rootcause')" id="nav-rootcause"><i class="fas fa-bug"></i> Root Cause</div>
+            <div class="nav-item disabled" onclick="switchView('view-report')" id="nav-report"><i class="fas fa-terminal"></i> Log Report</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div id="view-home" class="view-section active">
+            <div class="upload-container">
+                <i class="fas fa-shield-virus"></i>
+                <h2 style="color: white; margin-top: 0; text-shadow: 0 0 10px var(--neon-cyan);">SECURE UPLOAD PORTAL</h2>
+                <p style="color: var(--text-muted); margin-bottom: 30px; font-family: monospace;">Awaiting server logs for heuristic analysis...</p>
+
+                <input type="file" id="logFileInput" accept=".log,.txt,.csv" />
+                <button class="action-btn" id="analyzeBtn">Initialize Scan</button>
+
+                <div id="loader">
+                    <div class="cyber-spinner"></div>
+                    <div class="loader-text">DECRYPTING LOGS...</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-graph" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-sitemap"></i> Network Attack Topology</h2>
+                    <p>Hierarchical visualization of active threats.</p>
+                </div>
+            </div>
+            <div class="full-panel">
+                <div id="attackGraphBox"></div>
+            </div>
+        </div>
+
+        <div id="view-timeline" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-stream"></i> Chronological Kill Chain</h2>
+                    <p>Step-by-step reconstruction of unauthorized access.</p>
+                </div>
+            </div>
+            <div class="full-panel">
+                <div class="timeline-wrapper">
+                    <div class="kill-chain-container" id="timelineBox"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-intel" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-globe-americas"></i> Remote Indicators of Compromise</h2>
+                    <p>Geolocation and ISP profiling of external nodes.</p>
+                </div>
+            </div>
+            <div class="full-panel">
+                <table class="threat-table">
+                    <thead><tr><th>Host IP</th><th>Location</th><th>ISP/Org</th><th>Risk Level</th></tr></thead>
+                    <tbody id="intelBox"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-mitre" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-chess-board"></i> Adversary TTPs (MITRE)</h2>
+                    <p>Mapped tactics, techniques, and procedures.</p>
+                </div>
+            </div>
+            <div class="cards-grid" id="mitreBox"></div>
+        </div>
+
+        <div id="view-rootcause" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-bug"></i> Vulnerability Diagnostics</h2>
+                    <p>Identified system flaws and required security patches.</p>
+                </div>
+            </div>
+            <div class="cards-grid" id="rootCauseBox"></div>
+        </div>
+
+        <div id="view-report" class="view-section">
+            <div class="section-header">
+                <div class="section-header-text">
+                    <h2><i class="fas fa-terminal"></i> AI Executive Summary</h2>
+                    <p>Generated natural language incident report.</p>
+                </div>
+                <button class="action-btn small-btn" id="exportPdfBtn"><i class="fas fa-download"></i> EXPORT TO PDF</button>
+            </div>
+            <div class="full-panel" id="reportText"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let networkInstance = null;
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(viewId).classList.add('active');
+            document.getElementById('nav-' + viewId.replace('view-', '')).classList.add('active');
+
+            if(viewId === 'view-graph' && networkInstance) {
+                setTimeout(() => networkInstance.fit(), 50);
+            }
+        }
+
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const fileInput = document.getElementById('logFileInput');
+        const loader = document.getElementById('loader');
+        const exportPdfBtn = document.getElementById('exportPdfBtn');
+
+        const tacticIcons = {
+            "Reconnaissance": "fas fa-binoculars", "Resource Development": "fas fa-cogs", "Initial Access": "fas fa-door-open",
+            "Execution": "fas fa-terminal", "Persistence": "fas fa-shield-alt", "Privilege Escalation": "fas fa-level-up-alt",
+            "Defense Evasion": "fas fa-user-secret", "Credential Access": "fas fa-id-badge", "Discovery": "fas fa-network-wired",
+            "Lateral Movement": "fas fa-exchange-alt", "Collection": "fas fa-box-open", "Command and Control": "fas fa-server",
+            "Exfiltration": "fas fa-truck", "Impact": "fas fa-fire", "Unknown": "fas fa-bug"
+        };
+
+        analyzeBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) return alert("Please select a log file.");
+
+            analyzeBtn.style.display = "none";
+            loader.style.display = "block";
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/analyze', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.report) {
+
+                    if (data.graph && data.graph.nodes && data.graph.edges) {
+                        const container = document.getElementById('attackGraphBox');
+                        const graphData = {
+                            nodes: new vis.DataSet(data.graph.nodes),
+                            edges: new vis.DataSet(data.graph.edges)
+                        };
+
+                        const options = {
+                            layout: { hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', nodeSpacing: 250, levelSeparation: 150 } },
+                            physics: false,
+                            nodes: {
+                                shape: 'box', margin: 15, font: { color: '#000000', size: 16, face: 'monospace', bold: true },
+                                borderWidth: 2, shadow: { color: '#00f3ff', size: 10 }, borderRadius: 4
+                            },
+                            edges: {
+                                width: 2, font: { color: '#00f3ff', size: 13, align: 'middle', background: '#111827' },
+                                arrows: 'to', color: { color: '#00f3ff' }, smooth: { type: 'cubicBezier' }
+                            },
+                            groups: {
+                                attacker: { color: { background: '#ff003c', border: '#ff003c' }, font: {color: '#ffffff'} },
+                                target: { color: { background: '#00f3ff', border: '#00f3ff' }, font: {color: '#000000'} }
+                            }
+                        };
+                        networkInstance = new vis.Network(container, graphData, options);
+                    }
+
+                    const intelBox = document.getElementById('intelBox');
+                    intelBox.innerHTML = "";
+                    if (data.threat_intel && data.threat_intel.length > 0) {
+                        data.threat_intel.forEach(intel => {
+                            const badgeClass = intel.threat_level.includes("High") ? "badge-high" : "badge-low";
+                            intelBox.innerHTML += `<tr>
+                                <td style="color:var(--neon-cyan); font-weight:bold; font-family:monospace;">${intel.ip}</td>
+                                <td>${intel.location}</td>
+                                <td>${intel.isp || 'Unknown'}</td>
+                                <td><span class="badge ${badgeClass}">${intel.threat_level}</span></td>
+                            </tr>`;
+                        });
+                    }
+
+                    const timelineBox = document.getElementById('timelineBox');
+                    timelineBox.innerHTML = "";
+                    if (data.timeline) {
+                        data.timeline.forEach((item, index) => {
+                            timelineBox.innerHTML += `
+                                <div class="timeline-node">
+                                    <div class="timeline-circle">${item.step || index + 1}</div>
+                                    <div class="node-content">
+                                        <div class="node-title">${item.title}</div>
+                                        <div class="node-desc">${item.description}</div>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+
+                    const mitreBox = document.getElementById('mitreBox');
+                    mitreBox.innerHTML = "";
+                    if (data.mitre_mapping) {
+                        data.mitre_mapping.forEach(mapping => {
+                            const iconClass = tacticIcons[mapping.tactic] || tacticIcons["Unknown"];
+                            let techListHtml = mapping.techniques.map(tech => `<li>${tech}</li>`).join('');
+                            mitreBox.innerHTML += `
+                                <div class="cyber-card">
+                                    <div class="mitre-icon-container"><i class="${iconClass}"></i></div>
+                                    <div>
+                                        <div class="mitre-tactic-title">${mapping.tactic}</div>
+                                        <ul class="mitre-techniques-list">${techListHtml}</ul>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+
+                    const rootCauseBox = document.getElementById('rootCauseBox');
+                    rootCauseBox.innerHTML = "";
+                    if (data.root_cause && data.root_cause.length > 0) {
+                        data.root_cause.forEach(rc => {
+                            rootCauseBox.innerHTML += `
+                                <div class="cyber-card rc-card-danger" style="flex-direction:column; gap:10px;">
+                                    <div class="rc-issue"><i class="fas fa-exclamation-triangle"></i> ${rc.issue}</div>
+                                    <div class="rc-explanation">${rc.explanation}</div>
+                                    <div class="rc-fix"><i class="fas fa-wrench"></i> Fix: ${rc.fix}</div>
+                                </div>`;
+                        });
+                    }
+
+                    document.getElementById('reportText').innerHTML = marked.parse(data.report);
+
+                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('disabled'));
+                    loader.style.display = "none";
+                    analyzeBtn.style.display = "block";
+                    analyzeBtn.innerText = "Initialize New Scan";
+
+                    switchView('view-graph');
+
+                } else if (data.error) {
+                    alert("Error: " + data.error);
+                    loader.style.display = "none";
+                    analyzeBtn.style.display = "block";
+                }
+            } catch (err) {
+                alert("Connection failed. Is the backend running?");
+                loader.style.display = "none";
+                analyzeBtn.style.display = "block";
+            }
+        });
+
+        // --- NEW: PDF EXPORT LOGIC ---
+        exportPdfBtn.addEventListener('click', () => {
+            exportPdfBtn.innerText = "GENERATING PDF...";
+            exportPdfBtn.disabled = true;
+
+            const element = document.getElementById('reportText');
+
+            // Format the PDF to look like an official document but retain the dark theme
+            const opt = {
+                margin:       0.5,
+                filename:     'SentinelAI_Executive_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, backgroundColor: '#06090e' },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Create a temporary container to add a professional title specifically for the PDF
+            const pdfContainer = document.createElement('div');
+            pdfContainer.style.color = '#e0e6ed';
+            pdfContainer.style.backgroundColor = '#06090e';
+            pdfContainer.style.padding = '20px';
+            pdfContainer.style.fontFamily = 'monospace';
+            pdfContainer.innerHTML = `
+                <div style="text-align:center; border-bottom: 2px solid #00f3ff; margin-bottom: 30px; padding-bottom: 10px;">
+                    <h1 style="color: #00f3ff; font-family: 'Segoe UI', sans-serif; letter-spacing: 2px; margin:0;">[+] SentinelAI Command Center</h1>
+                    <p style="color: #8a96a8; margin-top:5px;">AUTOMATED INCIDENT RESPONSE REPORT</p>
+                </div>
+                ${element.innerHTML}
+            `;
+
+            // Generate and download
+            html2pdf().set(opt).from(pdfContainer).save().then(() => {
+                exportPdfBtn.innerHTML = '<i class="fas fa-download"></i> EXPORT TO PDF';
+                exportPdfBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
