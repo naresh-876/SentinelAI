@@ -2,6 +2,7 @@
 
 AI-powered cybersecurity log analysis tool.
 
+LINK FOR USE - https://naresh-876.github.io/SentinelAI/
 ## Setup
 
 1. Clone repo
